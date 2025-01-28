@@ -1,4 +1,4 @@
-let users = require('../mocks/users');
+let users = require('../mocks/data/users');
 
 module.exports = {
     listUsers(request, response) {
@@ -29,6 +29,11 @@ module.exports = {
 
     createUser(request, response) {
         const { body } = request
+
+        if (!body.name) {
+            return response.send(400, { error: 'Name is required' });
+        }
+
         const lastUserId = users[users.length - 1].id;
         const newUser = {
             id: lastUserId + 1,
