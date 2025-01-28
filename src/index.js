@@ -1,7 +1,8 @@
 const http = require('http');
 const { URL } = require('url');
 
-const bodyParser = require('./helpers/bodyParser');
+const bodyParser = require('./middlewares/bodyParser');
+const handleErrors = require('./middlewares/handleErrors');
 const routes = require('./routes');
 
 const server = http.createServer((request, response) => {
@@ -33,8 +34,10 @@ const server = http.createServer((request, response) => {
         };
 
         if (['POST', 'PUT', 'PATCH'].includes(request.method)) {
-            bodyParser(request, () => route.handler(request, response));
-
+            bodyParser(request, (error) => {
+                if (error) return handleErrors(error, response);
+                route.handler(request, response);
+            });
         } else {
             route.handler(request, response);
         }
