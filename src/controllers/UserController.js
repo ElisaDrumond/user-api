@@ -18,9 +18,9 @@ module.exports = {
     getUserById(request, response) {
         const { id } = request.params;
 
-        const userExists = users.find((user) => user.id === id);
+        const user = users.find((user) => user.id === Number(id));
 
-        if (!userExists) {
+        if (!user) {
             return response.send(400, { error: 'User not found' });
         }
 
@@ -30,7 +30,6 @@ module.exports = {
     createUser(request, response) {
         const { body } = request
         const lastUserId = users[users.length - 1].id;
-
         const newUser = {
             id: lastUserId + 1,
             name: body.name,
